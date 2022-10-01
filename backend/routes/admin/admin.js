@@ -2,8 +2,9 @@ const express = require('express')
 const app = express()
 require('dotenv').config()
 const adminController = require('../../controller/admin/admin')
-const jwt = require('jsonwebtoken')
+
 const { createError } = require('../../createError/createError')
+const {authenticateToken}=require('../../middleware/authToken')
 
 app.post('/api/signup',adminController.signup)
 
@@ -26,19 +27,7 @@ app.delete('/api/deleteBook',authenticateToken,adminController.deleteBook)
 
  
 
-function authenticateToken(req, res, next) {
-
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-    if (token == null) return res.sendStatus(401)
-    // eslint-disable-next-line no-undef
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) return next(createError(403, 'Authentication failed'))
-        req.user = user
-        next()
-    })
 
 
-}
 
 module.exports = app;
