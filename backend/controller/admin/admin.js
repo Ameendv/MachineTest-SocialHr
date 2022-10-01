@@ -10,6 +10,22 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+  signup: async (req, res, next) => {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    req.body.password = hashedPassword;
+
+    const userExist = await Admin.findOne({ username: req.body.username });
+    if (userExist) return res.status(409).json("Already registered ");
+
+    Admin.create(req.body)
+      .then((response) => {
+        return res.status(200).json("Created successfully");
+      })
+      .catch((error) => {
+        console.log(error);
+        next(createError());
+      });
+  },
   login: async (req, res, next) => {
     await Admin.findOne({ username: req.body.username })
       .then(async (data) => {
@@ -44,7 +60,6 @@ module.exports = {
     console.log(req.query.bookId);
     Books.findOneAndRemove({ _id: req.query.bookId })
       .then((response) => {
-       
         if (response) {
           return res.status(200).json("Book deleted successfully");
         }
@@ -56,8 +71,48 @@ module.exports = {
         next(createError(404, "Book not found"));
       });
   },
-  getBookDetails: (req, res) => {
-    console.log(req.query);
+  getBookDetails: (req, res, next) => {
+    Books.findOne({ _id: req.query.bookId })
+      .then((response) => {
+        if (response) {
+          return res.status(200).json({ response });
+        }
+        next(createError(404, "No book can be founded"));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  getAllBookDetails: (req, res) => {
+    Books.find()
+      .then((response) => {
+        return res.status(200).json({ response });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+  updateBook: (req, res, next) => {
+    Books.findByIdAndUpdate(
+      { _id: req.query.bookId },
+      {
+        name: req.body.name,
+        image_Url: req.body.image_Url,
+        author: req.body.author,
+        price: req.body.price,
+        pages: req.body.pages,
+      }
+    )
+      .then((response) => {
+        if (response) {
+          return res.status(200).json("Book details updated successfully");
+        }
+        next(createError());
+      })
+      .catch((error) => {
+        console.log(error);
+        next(createError());
+      });
   },
 };
 

@@ -5,13 +5,21 @@ const adminController = require('../../controller/admin/admin')
 const jwt = require('jsonwebtoken')
 const { createError } = require('../../createError/createError')
 
+app.post('/api/signup',adminController.signup)
+
 app.post('/api/login', adminController.login)
 
 app.post('/api/addBook',authenticateToken,adminController.addBook)
 
 app.get('/api/getBookDetails',authenticateToken,adminController.getBookDetails)
 
+app.get('/api/getAllBookDetails',authenticateToken,adminController.getAllBookDetails)
+
+app.patch('/api/updateBook',authenticateToken,adminController.updateBook)
+
 app.delete('/api/deleteBook',authenticateToken,adminController.deleteBook)
+
+
 
 
 
