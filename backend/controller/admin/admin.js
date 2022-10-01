@@ -5,7 +5,6 @@ const app = express();
 const Books = require('../../models/books');
 const Admin = require('../../models/admin');
 const { createError } = require('../../createError/createError');
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -13,10 +12,8 @@ module.exports = {
     signup: async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         req.body.password = hashedPassword;
-
         const userExist = await Admin.findOne({ username: req.body.username });
         if (userExist) return res.status(409).json('Already registered ');
-
         Admin.create(req.body)
             .then((response) => {
                 return res.status(200).json('Created successfully');
@@ -33,9 +30,7 @@ module.exports = {
                     next(createError(404, 'User not found'));
                 } else if (await bcrypt.compare(req.body.password, data.password)) {
                     const admin = { name: req.body.username };
-
                     const accessToken = generateAccessToken(admin);
-
                     res.status(200).json({ accessToken });
                 } else {
                     next(createError(401, 'Incorrect password'));
