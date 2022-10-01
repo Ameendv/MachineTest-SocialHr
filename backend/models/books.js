@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const books = new mongoose.Schema(
   {
@@ -10,9 +10,9 @@ const books = new mongoose.Schema(
     price:{type:Number}
    
     },
-  { collection: "books" , timestamps: true }
+  { collection: 'books' , timestamps: true }
 );
 
-const model = mongoose.model("Books", books);
+const model = mongoose.model('Books', books);
 
 module.exports = model;

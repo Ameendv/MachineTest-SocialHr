@@ -26,10 +26,10 @@ app.use(cookieParser())
 
 app.use('/admin',adminRoutes)
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, ) => {
     const errorStatus = err.status || 500
   
-    const errorMessage = err.message || "Something went wrong !"
+    const errorMessage = err.message || 'Something went wrong !'
   
     return res.status(errorStatus).json({
       success: false,
@@ -40,6 +40,7 @@ app.use((err, req, res, next) => {
   })
 
 
+  // eslint-disable-next-line no-undef
   const PORT = process.env.PORT || 4000
 
 

@@ -3,7 +3,6 @@ const app = express()
 require('dotenv').config()
 const adminController = require('../../controller/admin/admin')
 
-const { createError } = require('../../createError/createError')
 const {authenticateToken}=require('../../middleware/authToken')
 
 app.post('/api/signup',adminController.signup)
